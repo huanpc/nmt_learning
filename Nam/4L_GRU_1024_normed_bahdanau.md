@@ -1,4 +1,4 @@
-# normed_bahdanau gru 1024
+# 4L_GRU_1024_normed_bahdanau
 
 ## HPARAMS
 
@@ -11,10 +11,6 @@
     rest is default
 
 ## RESULT
-
-### OVERFLOW, STOP EARLY AT STEP 900
-
-## logs
 
 ```log
 step 100 lr 1 step-time 1.17s wps 4.79K ppl 1156114030.80 gN 4369.59 bleu 0.00, Fri Jan 18 04:40:45 2019
@@ -31,4 +27,4 @@ step 900 lr 1 step-time 0.94s wps 5.95K ppl 417990255296330399744.00 gN 93553425
 
 ## GRAPH
 
-![alt text](./graph.png "Logo Title Text 1")
+![alt text](images/4L_GRU_1024_normed_bahdanau.png "graph")
