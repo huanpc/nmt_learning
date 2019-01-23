@@ -120,3 +120,21 @@ Final project for VietAI course (ML + DL)
     ```
     # Best bleu, step 11000 lr 0.125 step-time 0.42s wps 13.27K ppl 4.36 gN 6.37 dev ppl 11.83, dev bleu 24.1, test ppl 10.92, test bleu 26.4, Tue Jan 22 09:40:25 2019
     ```
+
+**VI - EN**
+
+Experiment | Training Time | tst2012 (dev) BLEU | test2013 (test) BLEU
+--- | :---: | :---: | :---:
+NMT (SGD, lr=1.0, greedy) | | 20.7 | 23.7
+NMT (SGD, lr=1.0, beam=10) | | 21.7 | 24.4
+NMT (Adam, lr=0.001, greedy) | | - | -
+NMT (Adam, lr=0.001, beam=10) | | 20.4 | 22.9
+
+**EN - VI**
+
+Experiment | Training Time | tst2012 (dev) BLEU | test2013 (test) BLEU
+--- | :---: | :---: | :---:
+NMT (SGD, greedy) | | 23.2 | 25.5
+NMT (SGD, beam=10) | | 24.1 | **26.4**
+NMT (Adam, greedy) | | - | -
+NMT (Adam, beam=10) | | - | -

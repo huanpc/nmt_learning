@@ -55,6 +55,8 @@
 %% for the whole article with \linenumbers after \end{frontmatter}.
 \usepackage{lineno}
 
+\usepackage{float}
+
 %% natbib.sty is loaded by default. However, natbib options can be
 %% provided with \biboptions{...} command. Following options are
 %% valid:
@@ -165,21 +167,25 @@ Việc encode toàn bộ thông tin từ source vào 1 vector cố định khi�
 
 \emph{Cơ chế "tổng hợp" Attention trong paper của tác giả Bahdanau: Align and Jointly model (Additive Attention).}
 
-\begin{figure}[h]
-\centering\includegraphics[width=0.4\linewidth]{img/attention_mechanism.jpg}
+\begin{figure}[H]
+\centering\includegraphics[width=0.3\linewidth]{img/attention_mechanism.jpg}
 \caption{Attention mechanism – example of an attention-based NMT system as described in (Luong et al., 2015) . We highlight in detail the first step of the attention computation. For clarity, we don't show the embedding and projection layers in Figure (2).}
 \end{figure}
 
 Ma trận bất đối xứng (confusion matrix) được tạo ra bởi alignment score, thể hiện mức độ tương quan correlation giữa source và target.
 
-\begin{figure}[h]
-\centering\includegraphics[width=0.4\linewidth]{img/attention_vis.jpg}
+\begin{figure}[H]
+\centering\includegraphics[width=0.3\linewidth]{img/attention_vis.jpg}
 \caption{Attention visualization – example of the alignments between source and target sentences. Image is taken from (Bahdanau et al., 2015).}
 \end{figure}
 
 \subsection{(SGD, Adam)}
 
 \subsection{Inference mode (Beam search, Greedy)}
+
+\paragraph{\textbf{Greedy}:https://github.com/tensorflow/nmt#inference--how-to-generate-translations}
+
+\paragraph{\textbf{Beam search}:https://github.com/tensorflow/nmt#beam-search}
 
 \section{Measure performance with BLEU score}
 \label{S:2}
@@ -192,22 +198,51 @@ e = mc^2
 \section{Training with different hyper-parameters}
 \label{S:3}
 
+\subsection{IWSLT English-Vietnamese dataset}
+Train: 133K examples, vocab=vocab.(vi|en), train=train.(vi|en) dev=tst2012.(vi|en), test=tst2013.(vi|en)
+
+\subsection{Data Input Pipeline}
+https://github.com/tensorflow/nmt#data-input-pipeline
+
+\subsection{Impact of choosing hyper-parameters}
+%%
+\subsubsection{Training details}
+I train 2-layer LSTMs of 512 units with bidirectional encoder (i.e., 1 bidirectional layers for the encoder), embedding dim is 512. LuongAttention (scale=True) is used together with dropout \emph{keep\_prob} of 0.8. All parameters are uniformly. We use SGD with learning rate 1.0 as follows: train for 12K steps (~ 12 epochs); after 8K steps, we start halving learning rate every 1K step.\par
+Training system: Tesla K80
+%%
+\subsubsection{Result with VI - EN translation model}
 \begin{table}[h]
 \centering
 \begin{tabular}{l l l}
 \hline
-\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
+\textbf{Parameter} & \textbf{Time} & \textbf{BLEU score}\\
 \hline
 Treatment 1 & 0.0003262 & 0.562 \\
 Treatment 2 & 0.0015681 & 0.910 \\
 Treatment 3 & 0.0009271 & 0.296 \\
 \hline
 \end{tabular}
-\caption{Table caption}
+\caption{VI - EN performances}
+\end{table}
+%%
+\subsubsection{Result with EN - VI translation model}
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l 1}
+\hline
+\textbf{Experiment} & \textbf{Training Time} & \textbf{tst2012 (dev) BLEU} & \textbf{test2013 (test) BLEU}\\
+\hline
+Treatment 1 & 0.0003262 & 0.562 & 1\\
+Treatment 2 & 0.0015681 & 0.910 & 1\\
+Treatment 3 & 0.0009271 & 0.296 & 1\\
+\hline
+\end{tabular}
+\caption{VI - EN performances}
 \end{table}
 
+\subsubsection{Conclusion}
 
-\section{Result with Attention Matrix}
+\section{Result visualization with Attention Matrix}
 \label{S:4}
 
 %% The Appendices part is started with the command \appendix;
