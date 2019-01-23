@@ -125,16 +125,16 @@ Final project for VietAI course (ML + DL)
 
 Experiment | Training Time | tst2012 (dev) BLEU | test2013 (test) BLEU
 --- | :---: | :---: | :---:
-NMT (SGD, lr=1.0, greedy) | | 20.7 | 23.7
-NMT (SGD, lr=1.0, beam=10) | | 21.7 | 24.4
-NMT (Adam, lr=0.001, greedy) | | - | -
-NMT (Adam, lr=0.001, beam=10) | | 20.4 | 22.9
+NMT (SGD, lr=1.0, greedy) | 6561 | 20.7 | 23.7
+NMT (SGD, lr=1.0, beam=10) | - | 21.7 | 24.4
+NMT (Adam, lr=0.001, greedy) | - | - | -
+NMT (Adam, lr=0.001, beam=10) | 7326 | 20.4 | 22.9
 
 **EN - VI**
 
 Experiment | Training Time(s) | tst2012 (dev) BLEU | test2013 (test) BLEU
 --- | :---: | :---: | :---:
-NMT (SGD, greedy) | | 23.2 | 25.5
-NMT (SGD, beam=10) | | 24.1 | **26.4**
-NMT (Adam, greedy) | | - | -
+NMT (SGD, greedy) | - | 23.2 | 25.5
+NMT (SGD, beam=10) | 6273 | 24.1 | **26.4**
+NMT (Adam, greedy) | 6132 | 22.2 | 24.9
 NMT (Adam, beam=10) | 6495 | 22.8 | 24.3
