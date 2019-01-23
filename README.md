@@ -132,9 +132,9 @@ NMT (Adam, lr=0.001, beam=10) | | 20.4 | 22.9
 
 **EN - VI**
 
-Experiment | Training Time | tst2012 (dev) BLEU | test2013 (test) BLEU
+Experiment | Training Time(s) | tst2012 (dev) BLEU | test2013 (test) BLEU
 --- | :---: | :---: | :---:
 NMT (SGD, greedy) | | 23.2 | 25.5
 NMT (SGD, beam=10) | | 24.1 | **26.4**
 NMT (Adam, greedy) | | - | -
-NMT (Adam, beam=10) | | - | -
+NMT (Adam, beam=10) | 6495 | 22.8 | 24.3
