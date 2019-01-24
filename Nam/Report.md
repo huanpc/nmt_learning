@@ -68,7 +68,7 @@ Giai đoạn đó cũng là lúc kiến trúc LSTM ra đời qua nghiên cứu c
 
 Vào năm 2015, để tăng độ chính xác trong việc nắm bắt thông tin ở các mô hình __Encoder-Decoder__ thì cơ chế _Attention_ đã được giới thiệu với ý tưởng chính là tạo một _đường tắt_ liên kết trực tiếp từng từ ở ngôn ngữ đích với từ tương ứng cần _chú ý_ ở ngôn ngữ gốc, bên cạnh ý nghĩa được mã hóa của __vector context__ ([Bahdanau et al., 2015](https://arxiv.org/abs/1409.0473) & [Luong et al., 2015](https://arxiv.org/abs/1508.04025)).
 
-![Alt text](images\att_matrix0.png "matrix0")
+![Alt text](images/att_matrix0.png "matrix0")
 
 _Hình 3. Mô tả về sự chú ý ở ngôn ngữ gốc và ngôn ngữ địch_
 
