@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <title>__1.2. BLEU Score__</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        <link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'HelveticaNeue-Light', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+    </head>
+    <body>
+        <h3 id="12-bleu-score"><strong>1.2. BLEU Score</strong></h3>
+<p>Bilingual Evaluation Understudy Score hay ngắn gọn là BLEU score là một thang điểm được dùng phổ biến trong đánh giá MT. BLEU được Kishore Papineni và cộng sự đề xuất lần đầu vào năm 2002 qua bài nghiên cứu &quot;a Method for Automatic Evaluation of Machine Translation&quot;.</p>
+<p>BLEU được tính dựa trên số lượng n-grams giống nhau giữa câu dịch của mô hình (output) với các câu tham chiếu tương ứng (label) có xét tới yếu tố độ dài của câu.</p>
+<p>Số n-grams tối đa của BLEU là không giới hạn, nhưng vì xét về ý nghĩa, cụm từ quá dài thường không có nhiều ý nghĩa, và nghiên cứu cũng đã cho thấy là với 4-gram, điểm số BLEU trung bình cho khả năng dịch thuật của con người cũng đã giảm khá nhiều nên n-grams tối đa thường được sử dụng là 4-gram.</p>
+<p>Xét bộ câu dịch và tham chiếu có cùng độ dài như sau:</p>
+<ul>
+<li>Output: Đây là cái ghế</li>
+<li>Label 1: Đây là cái bàn</li>
+<li>Label 2: Kia có cái ghế</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>1-gram</th>
+<th>Output</th>
+<th>Label 1</th>
+<th>Label 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Đây</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>là</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>cái</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>ghế</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>BLEU độc lập 1-gram:</p>
+<ul>
+<li>1-gram và Label 1: <strong>3/4</strong> = 0.75</li>
+<li>1-gram và Label 2: <strong>2/4</strong> = 0.5</li>
+<li>1-gram và Label 1 + 2: <strong>4/4</strong> = 1</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>2-grams</th>
+<th>Output</th>
+<th>Label 1</th>
+<th>Label 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Đây là</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>là cái</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>cái ghế</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>Tương tự, BLEU độc lập cho 2-gram sẽ được tính như sau:</p>
+<ul>
+<li>2-grams và Label 1: <strong>2/3</strong> = 0.67</li>
+<li>2-grams và Label 2: <strong>1/3</strong> = 0.33</li>
+<li>2-grams và Label 1 + 2: <strong>3/3</strong> = 1</li>
+</ul>
+<p>Công thức tổng quát độ chính xác cho mỗi n-grams:</p>
+<p align="center">
+<img width="80%" src="file:///e%3A/RedNam/Google%20Drive/Colab%20Notebooks/Final/nmt_learning/Nam/images/BLEU0.png" />
+<br>
+Hình 3. Độ chính xác của n-gram.
+</p>
+<p>Với cách tính này, thì sẽ dễ dàng thấy rằng nếu output càng ngắn, thì độ chính xác được tính theo công thức sẽ càng cao.
+Ví dụ với cùng 2 Label trên, nếu output chỉ ra duy nhất chữ <strong>&quot;cái&quot;</strong> thì BLEU sẽ bằng 1.
+Lúc này, để hạn chế việc câu quá ngắn thì BP (brevity penalty) được sử dụng để so sánh độ dài output <strong>c</strong> và độ dài câu tham chiếu <strong>r</strong>. Công thức tổng quát cho BLEU score lúc này sẽ là:</p>
+<p>Công thức tổng quát độ chính xác cho mỗi n-grams:</p>
+<p align="center">
+<img width="80%" src="file:///e%3A/RedNam/Google%20Drive/Colab%20Notebooks/Final/nmt_learning/Nam/images/BLEU.png" />
+<br>
+Hình 4. BLEU score.
+</p>
+<p>Quay lại ví dụ ban đầu, BLEU chung cho cả 1-gram và 2-gram với trọng số <strong><em>wn</em></strong> ngang nhau <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mn>1</mn><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\tfrac {1}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.190108em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> sẽ là :</p>
+<ul>
+<li>
+<p>1-gram + 2-grams và Label 1:</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mstyle mathsize="1.728em"><msup><mi>e</mi><mrow><mo>(</mo><mn>0.5</mn><mo>×</mo><mi>l</mi><mi>o</mi><mi>g</mi><mfrac><mn>3</mn><mn>4</mn></mfrac><mo>+</mo><mn>0.5</mn><mo>×</mo><mi>l</mi><mi>o</mi><mi>g</mi><mfrac><mn>2</mn><mn>3</mn></mfrac><mo>)</mo></mrow></msup><mo>=</mo><mn>0.71</mn></mstyle></mrow><annotation encoding="application/x-tex">\LARGE{e^{(0.5 \times log\tfrac {3}{4}+0.5 \times log\tfrac {2}{3})}} = 0.71</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.7445039999999998em;vertical-align:0em;"></span><span class="mord sizing reset-size6 size9"><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0095509259259259em;"><span style="top:-3.563em;margin-right:0.02893518518518519em;"><span class="pstrut" style="height:3.2em;"></span><span class="sizing reset-size9 size7 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">0</span><span class="mord mtight">.</span><span class="mord mtight">5</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size7 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9310333333333334em;"><span style="top:-2.6529666666666665em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34703333333333336em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size7 size6"></span></span><span class="mbin mtight">+</span><span class="mord mtight">0</span><span class="mord mtight">.</span><span class="mord mtight">5</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size7 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9310333333333334em;"><span style="top:-2.6529666666666665em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34703333333333336em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size7 size6"></span></span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel sizing reset-size6 size9">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.11359232em;vertical-align:0em;"></span><span class="mord sizing reset-size6 size9">0</span><span class="mord sizing reset-size6 size9">.</span><span class="mord sizing reset-size6 size9">7</span><span class="mord sizing reset-size6 size9">1</span></span></span></span></p>
+</li>
+<li>
+<p>1-gram + 2-grams và Label 2:</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mstyle mathsize="1.728em"><msup><mi>e</mi><mrow><mo>(</mo><mn>0.5</mn><mo>×</mo><mi>l</mi><mi>o</mi><mi>g</mi><mfrac><mn>2</mn><mn>4</mn></mfrac><mo>+</mo><mn>0.5</mn><mo>×</mo><mi>l</mi><mi>o</mi><mi>g</mi><mfrac><mn>1</mn><mn>3</mn></mfrac><mo>)</mo></mrow></msup><mo>=</mo><mn>0.41</mn></mstyle></mrow><annotation encoding="application/x-tex">\LARGE{e^{(0.5 \times log\tfrac {2}{4}+0.5 \times log\tfrac {1}{3})}} = 0.41</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.7445039999999998em;vertical-align:0em;"></span><span class="mord sizing reset-size6 size9"><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0095509259259259em;"><span style="top:-3.563em;margin-right:0.02893518518518519em;"><span class="pstrut" style="height:3.2em;"></span><span class="sizing reset-size9 size7 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">0</span><span class="mord mtight">.</span><span class="mord mtight">5</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size7 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9310333333333334em;"><span style="top:-2.6529666666666665em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34703333333333336em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size7 size6"></span></span><span class="mbin mtight">+</span><span class="mord mtight">0</span><span class="mord mtight">.</span><span class="mord mtight">5</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size7 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9310333333333334em;"><span style="top:-2.6529666666666665em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34703333333333336em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size7 size6"></span></span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel sizing reset-size6 size9">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.11359232em;vertical-align:0em;"></span><span class="mord sizing reset-size6 size9">0</span><span class="mord sizing reset-size6 size9">.</span><span class="mord sizing reset-size6 size9">4</span><span class="mord sizing reset-size6 size9">1</span></span></span></span></p>
+</li>
+<li>
+<p>1-gram + 2-grams và Label 1 + 2:</p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mstyle mathsize="1.728em"><msup><mi>e</mi><mrow><mo>(</mo><mn>0.5</mn><mo>×</mo><mi>l</mi><mi>o</mi><mi>g</mi><mfrac><mn>4</mn><mn>4</mn></mfrac><mo>+</mo><mn>0.5</mn><mo>×</mo><mi>l</mi><mi>o</mi><mi>g</mi><mfrac><mn>3</mn><mn>3</mn></mfrac><mo>)</mo></mrow></msup><mo>=</mo><mn>1</mn></mstyle></mrow><annotation encoding="application/x-tex">\LARGE{e^{(0.5 \times log\tfrac {4}{4}+0.5 \times log\tfrac {3}{3})}} = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.7445039999999998em;vertical-align:0em;"></span><span class="mord sizing reset-size6 size9"><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0095509259259259em;"><span style="top:-3.563em;margin-right:0.02893518518518519em;"><span class="pstrut" style="height:3.2em;"></span><span class="sizing reset-size9 size7 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight">0</span><span class="mord mtight">.</span><span class="mord mtight">5</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size7 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9310333333333334em;"><span style="top:-2.6529666666666665em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34703333333333336em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size7 size6"></span></span><span class="mbin mtight">+</span><span class="mord mtight">0</span><span class="mord mtight">.</span><span class="mord mtight">5</span><span class="mbin mtight">×</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size7 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9310333333333334em;"><span style="top:-2.6529666666666665em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size7 size6 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.34703333333333336em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size7 size6"></span></span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel sizing reset-size6 size9">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.11359232em;vertical-align:0em;"></span><span class="mord sizing reset-size6 size9">1</span></span></span></span></p>
+</li>
+</ul>
+<p>Đối với trường hợp có nhiều hơn 1 Label và các Label có độ dài khác nhau thì lúc này, BP sẽ được tính theo Label nào có chênh lệch độ dài so Output là ít nhất.</p>
+
+    </body>
+    </html>
